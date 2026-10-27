@@ -1,4 +1,4 @@
-FROM ghcr.io/zitadel/zitadel:latest
+FROM ghcr.io/zitadel/zitadel:v4.20.0
 
 ARG ZITADEL_DATABASE_POSTGRES_HOST
 ARG ZITADEL_DATABASE_POSTGRES_PORT
@@ -33,6 +33,12 @@ ENV ZITADEL_FIRSTINSTANCE_ORG_HUMAN_PASSWORD=${ZITADEL_FIRSTINSTANCE_ORG_HUMAN_P
 ENV ZITADEL_FIRSTINSTANCE_ORG_NAME=${ZITADEL_FIRSTINSTANCE_ORG_NAME}
 ENV ZITADEL_FIRSTINSTANCE_ORG_HUMAN_EMAIL_ADDRESS=${ZITADEL_FIRSTINSTANCE_ORG_HUMAN_EMAIL_ADDRESS}
 ENV ZITADEL_MASTERKEY=${ZITADEL_MASTERKEY}
+
+# Zitadel v4 defaults new instances to Login V2, which is served by a separate
+# container (ghcr.io/zitadel/zitadel-login) that this single-service template
+# does not run — without this flag every login 404s. Keep the built-in v1
+# login; deployers who run the login container can override this to true.
+ENV ZITADEL_DEFAULTINSTANCE_FEATURES_LOGINV2_REQUIRED=false
 
 EXPOSE 8080
 
